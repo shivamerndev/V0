@@ -25,5 +25,6 @@ export async function createService(sandboxId) {
         namespace: "default",
         body: serviceManifest
     })
+
     return response.body;
 }

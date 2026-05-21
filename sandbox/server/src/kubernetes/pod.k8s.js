@@ -11,13 +11,9 @@ export async function createPod(sandboxId) {
         spec: {
             containers: [
                 {
-                    image: "template:latest",
+                    image: "template",
                     name: "sandbox-container",
-                    ports: [{
-                        containerPort: 5173,
-                        protocol: "TCP",
-                        name: "sandbox-port"
-                    }],
+                    ports: [ { containerPort: 5173, protocol: "TCP", name: "sandbox-port" } ],
                     resources: {
                         limits: { cpu: "500m", memory: "1Gi" },
                         requests: { cpu: "250m", memory: "512Mi" }
@@ -33,4 +29,11 @@ export async function createPod(sandboxId) {
     })
 
     return response.body;
+}
+
+export async function deletePod(sandboxId) {
+    await k8sCoreApi.deleteNamespacedPod({
+        name: `sandbox-pod-${sandboxId}`,
+        namespace: "default"
+    })
 }

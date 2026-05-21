@@ -3,7 +3,7 @@ import k8sCoreApi from "./k8s.config.js";
 export async function createService(sandboxId) {
     const serviceManifest = {
         metadata: {
-            name: `${sandboxId}-sandbox-service`,
+            name: `sandbox-service-${sandboxId}`,
             labels: {
                 sandboxId: sandboxId
             }
@@ -25,6 +25,12 @@ export async function createService(sandboxId) {
         namespace: "default",
         body: serviceManifest
     })
-
     return response.body;
+}
+
+export async function deleteService(sandboxId) {
+    await k8sCoreApi.deleteNamespacedService({
+        name: `sandbox-service-${sandboxId}`,
+        namespace: "default"
+    })
 }

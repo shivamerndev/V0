@@ -1,12 +1,15 @@
 FROM node:20-alpine
 
-WORKDIR /app
+WORKDIR /router
 
-COPY package.json ./
+RUN npm install -g pnpm
 
-RUN npm install
+COPY ./package.json pnpm-lock.yaml /router/
 
-COPY . .
+
+RUN pnpm install
+
+COPY . /router
 
 EXPOSE 3000
 

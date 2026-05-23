@@ -4,8 +4,6 @@ kind: Config
 metadata:
   name: v0
 
-
-
 build:
 
   tagPolicy:
@@ -34,10 +32,10 @@ build:
 
 manifests:
   rawYaml:
-    - k8s/ingress.yml
-    - k8s/rbac.yml
-    - k8s/router-deployment.yml
-    - k8s/router-service.yml
-    - k8s/sandbox-server-deployment.yml
-    - k8s/sandbox-server-service.yml
-    - k8s/secrets.yml
+    - kubernetes/ingress.yml
+    - kubernetes/rbac.yml
+    - kubernetes/router-deployment.yml
+    - kubernetes/router-service.yml
+    - kubernetes/sandbox-server-deployment.yml
+    - kubernetes/sandbox-server-service.yml
+    - kubernetes/secrets.yml

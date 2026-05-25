@@ -16,7 +16,7 @@ spec:
     spec:
       serviceAccountName: resource-manager
       containers:
-      - image:  sandbox-server:v1
+      - image:  sandbox
         imagePullPolicy: Never
         name:  main-sandbox-server
         resources:

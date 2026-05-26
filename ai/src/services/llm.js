@@ -5,12 +5,12 @@ import * as z from "zod"
 
 const mediumModel = new ChatMistralAI({
     model: "mistral-medium-latest",
-    apiKey: process.env.MISTRALAI_API_KEY
+    apiKey: process.env.MISTRAL_API_KEY
 })
 
 const codeModel = new ChatMistralAI({
     model: "codestral-latest",
-    apiKey: process.env.MISTRALAI_API_KEY
+    apiKey: process.env.MISTRAL_API_KEY
 })
 
 export const intentAgent = createAgent({

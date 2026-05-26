@@ -32,15 +32,15 @@ build:
       docker:
         dockerfile: dockerfile
 
-    # - image: ai-orchestrator
-    #   context: ai
-    #   docker:
-    #     dockerfile: dockerfile
+    - image: ai-orchestrator
+      context: ai
+      docker:
+        dockerfile: dockerfile
 
 manifests:
   rawYaml:
-    # - kubernetes/ai-deployment.yml
-    # - kubernetes/ai-service.yml
+    - kubernetes/ai-deployment.yml
+    - kubernetes/ai-service.yml
     - kubernetes/ingress.yml
     - kubernetes/rbac.yml
     - kubernetes/router-deployment.yml

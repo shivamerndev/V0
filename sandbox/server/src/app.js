@@ -30,12 +30,12 @@ app.post("/api/sandbox/start", async (req, res) => {
 
     await createPod(sandboxId);
     await createService(sandboxId);
-    await redis.set(`sandbox:${sandboxId}`, "active", "EX", 60 * 20)
+    await redis.set(`sandbox:${sandboxId}`, "active", "EX", 60 * 2)
 
     res.status(201).json({
         message: "Sandbox environment created successfully",
         sandboxId,
-        preview: `${sandboxId}.preview.localhost`
+        preview: `http://${sandboxId}.preview.localhost`
     });
 
 })

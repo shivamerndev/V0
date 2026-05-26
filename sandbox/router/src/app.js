@@ -58,7 +58,7 @@ app.use(async (req, res, next) => {
     const uuid = host.split('.')[ 0 ]
     const isPreview = host.split('.')[ 1 ] === "preview"
 
-    await redis.expire(`sandbox:${uuid}`, 60 * 20)
+    await redis.expire(`sandbox:${uuid}`, 60 * 2)
 
     return (isPreview ? getPreviewProxy(uuid) : getAgentProxy(uuid))(req, res, next)
 })

@@ -3,9 +3,12 @@ import { createProxyMiddleware } from "http-proxy-middleware"
 import { createServer } from 'http';
 import { createProxyServer } from 'httpxy';
 import { redis } from './config/redis.config.js';
+import morgan from "morgan"
+
 
 const app = express();
 
+app.use(morgan("dev"))
 
 app.get("/_status/healthz", (req, res) => {
     res.status(200).json({
@@ -58,7 +61,7 @@ app.use(async (req, res, next) => {
     const uuid = host.split('.')[ 0 ]
     const isPreview = host.split('.')[ 1 ] === "preview"
 
-    await redis.expire(`sandbox:${uuid}`, 60 * 2)
+    await redis.expire(`sandbox:${uuid}`, 60 * 20)
 
     return (isPreview ? getPreviewProxy(uuid) : getAgentProxy(uuid))(req, res, next)
 })

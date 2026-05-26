@@ -1,5 +1,5 @@
 import { StateGraph, MessagesValue, StateSchema, START, END } from "@langchain/langgraph"
-import { codeAgent, intentAgent } from "./llm.js"
+import { codeAgent, intentAgent } from "./ai.service.js"
 import { HumanMessage } from "langchain"
 
 const state = new StateSchema({
@@ -21,7 +21,11 @@ const intentNode = async ({ messages }, config) => {
         messages: new HumanMessage("Plan:\n" + plan)
     }
 }
+
 const codeNode = async ({ messages }, config) => {
+
+    console.log("Code Node Is Strated")
+
     const response = await codeAgent.invoke({ messages }, config)
 
     return {

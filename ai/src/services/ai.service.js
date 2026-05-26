@@ -1,6 +1,6 @@
 import { ChatMistralAI } from "@langchain/mistralai"
 import { createAgent } from "langchain"
-import { list_files, read_file, update_file } from "./tools.js"
+import { list_files, read_file, update_file } from "./tools.service.js"
 import * as z from "zod"
 
 const mediumModel = new ChatMistralAI({

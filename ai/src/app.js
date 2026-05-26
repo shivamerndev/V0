@@ -1,6 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
-import { graph } from './services/graph.js';
+import { graph } from './services/graph.service.js';
 import { HumanMessage } from "langchain"
 
 const app = express();

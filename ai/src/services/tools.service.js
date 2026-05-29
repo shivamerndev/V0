@@ -5,16 +5,21 @@ import { tool } from "langchain"
 
 export const list_files = tool(async ({ }, config) => {
 
-    console.log("Listing files in sandbox:", config.context.sandboxId)
+    const writer = config.writer
 
+    writer("Listing files in sandbox: " + config.configurable.sandboxId)
 
-    const response = await axios.get(`http://sandbox-service-${config.context.sandboxId}:8080/list-files`)
+    console.log("Config in list_files tool:", config)
+
+    console.log("Listing files in sandbox:", config.configurable.sandboxId)
+
+    const response = await axios.get(`http://sandbox-service-${config.configurable.sandboxId}:8080/list-files`)
 
     return JSON.stringify(response.data.files)
 }, {
     name: "list_files",
     description: "Use this tool to List all files in the project.",
-    inputSchema: z.object({})
+    schema: z.object({})
 })
 
 
@@ -23,9 +28,13 @@ export const list_files = tool(async ({ }, config) => {
  */
 export const read_file = tool(async ({ files }, config) => {
 
-    console.log("Reading files in sandbox:", config.context.sandboxId, files)
+    const writer = config.writer
 
-    const response = await axios.get(`http://sandbox-service-${config.context.sandboxId}:8080/read-files?files=${files.join(',')}`)
+    writer("Reading files in sandbox: " + config.configurable.sandboxId + " with files: " + JSON.stringify(files))
+
+    console.log("Reading files in sandbox:", config.configurable.sandboxId, files)
+
+    const response = await axios.get(`http://sandbox-service-${config.configurable.sandboxId}:8080/read-files?files=${files.join(',')}`)
 
     return JSON.stringify(response.data.files)
 
@@ -33,7 +42,7 @@ export const read_file = tool(async ({ files }, config) => {
     {
         name: "read_file",
         description: "Use this tool to read files in the project. Input is an array of file paths. Output is an object with file paths as keys and file content as values.",
-        inputSchema: z.object({
+        schema: z.object({
             files: z.array(z.string()).describe("An array of file paths to read eg. [\"src/App.jsx\", \"vite.config.js\"]")
         })
     }
@@ -46,7 +55,12 @@ export const read_file = tool(async ({ files }, config) => {
  */
 export const update_file = tool(async ({ files = [] }, config) => {
 
-    console.log("Updating files in sandbox:", config.context.sandboxId, files)
+
+
+    const writer = config.writer
+
+    writer("Updating files in sandbox: " + config.configurable.sandboxId + " with files: " + JSON.stringify(files))
+    console.log("Updating files in sandbox:", config.configurable.sandboxId, files)
 
     const payload = {};
     for (const file of files) {
@@ -61,7 +75,7 @@ export const update_file = tool(async ({ files = [] }, config) => {
      * }
      */
 
-    const response = await axios.post(`http://sandbox-service-${config.context.sandboxId}:8080/update-files`, {
+    const response = await axios.post(`http://sandbox-service-${config.configurable.sandboxId}:8080/update-files`, {
         files: payload
     })
 
@@ -71,7 +85,7 @@ export const update_file = tool(async ({ files = [] }, config) => {
     {
         name: "update_file",
         description: "Use this tool to update/create files in the project. Input is an array of objects with file path and file content to update/create. Output is an object with file paths as keys and file content as values.",
-        inputSchema: z.object({
+        schema: z.object({
             files: z.array(z.object({
                 path: z.string().describe("The path of the file to update/create"),
                 content: z.string().describe("The content of the file to update/create")

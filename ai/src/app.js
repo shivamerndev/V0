@@ -19,12 +19,51 @@ app.get('/_status/readyz', (req, res) => {
 app.post('/api/ai/invoke', async (req, res) => {
     const { userInput, sandboxId } = req.body;
 
-    const result = await graph.invoke({
-        messages: [ new HumanMessage(userInput) ]
-    }, {
-        sandboxId
-    })
 
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'X-Accel-Buffering': 'no'
+    });
+
+
+    const keepalive = setInterval(() => {
+        res.write(': keepalive\n\n');
+    }, 15000);
+
+    try {
+        const stream = await graph.stream({
+            messages: [ new HumanMessage(userInput) ]
+        }, {
+            streamMode: "custom",
+            configurable: {
+                sandboxId,
+                timeout: 6000000
+            },
+            recursionLimit: 100,          // ← allow up to 100 agent loop iterations
+            timeout: 10 * 60 * 1000,
+        })
+
+        for await (const message of stream) {
+
+            console.log("Received message from Code Agent:", message)
+
+            res.write(`data: ${JSON.stringify(message)}\n\n`); // send message to client as SSE
+        }
+
+        res.write(`data: ${JSON.stringify({ type: "done" })}\n\n`)
+        res.end()
+    } catch (error) {
+        console.error("AI invoke failed:", error)
+
+        if (!res.headersSent) {
+            res.status(500)
+        }
+
+        res.write(`event: error\ndata: ${JSON.stringify({ message: error.message })}\n\n`)
+        res.end()
+    }
 })
 
 export default app; 

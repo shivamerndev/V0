@@ -4,10 +4,7 @@ kind: Config
 metadata:
   name: v0
 
-
-
 build:
-
   tagPolicy:
     sha256: {}
 
@@ -37,6 +34,16 @@ build:
       docker:
         dockerfile: dockerfile
 
+    - image: auth
+      context: auth
+      docker:
+        dockerfile: dockerfile
+
+    - image: sync
+      context: sandbox/sync-agent
+      docker:
+        dockerfile: dockerfile
+
 manifests:
   rawYaml:
     - kubernetes/ai-deployment.yml
@@ -48,3 +55,5 @@ manifests:
     - kubernetes/sandbox-server-deployment.yml
     - kubernetes/sandbox-server-service.yml
     - kubernetes/secrets.yml
+    - kubernetes/auth-deployment.yml
+    - kubernetes/auth-service.yml

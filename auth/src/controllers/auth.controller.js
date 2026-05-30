@@ -2,6 +2,7 @@ import userValidator from "../validator/user.validator.js"
 import authService from "../services/auth.service.js";
 import { AppError, asyncHandler } from "../utils/error.utils.js"
 import { verifyRefreshToken } from "../utils/token.utils.js";
+import { channel, QUEUE_NAME } from "../services/messageBroker.service.js";
 
 
 class AuthController {
@@ -16,6 +17,17 @@ class AuthController {
         let { accessToken, refreshToken, httpOnly } = await userService.register(req.body)
 
         res.cookie("refresh_token", refreshToken, httpOnly)
+
+
+        // Send user data to message broker
+        const userData = {
+            id: newUser._id,
+            name: newUser.name,
+            email: newUser.email
+        };
+
+        channel.sendToQueue(QUEUE_NAME, Buffer.from(JSON.stringify(userData)), { persistent: true });
+
         res.success(201, "Registered Successfully.", { token: accessToken })
     })
 
